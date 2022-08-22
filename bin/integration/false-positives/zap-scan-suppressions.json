@@ -1,0 +1,9 @@
+[
+ {
+  "name": "Path Traversal",
+  "cweid": "22",
+  "wascid": "33",
+  "method": "POST",
+  "param": "creditcardNumber"
+ }
+]

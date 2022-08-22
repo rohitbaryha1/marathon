@@ -1,0 +1,213 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>demo</groupId>
+	<artifactId>marathon</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Marathon Vulnerable Training Application</name>
+
+
+	<repositories>
+		<repository>
+			<id>batik-repo</id>
+			<name>Batik Repo</name>
+			<url>http://repository.openmindonline.it</url>
+		</repository>
+		<repository>
+			<id>JBoss repository</id>
+			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+		</repository>
+	</repositories>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spotbugs.suppression.filename>spotbugs-suppressions.xml</spotbugs.suppression.filename>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Dependencies for Marathon: some oldies, but goodies - deliberately vulnerable -->
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>struts</groupId>
+			<artifactId>struts</artifactId>
+			<version>1.2.9</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.batik</groupId>
+			<artifactId>org.apache.batik.util</artifactId>
+			<version>1.6.0-20070705</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.batik</groupId>
+			<artifactId>org.apache.batik.transcoder</artifactId>
+			<version>1.6.0-20070705</version>
+		</dependency>
+		<dependency>
+			<groupId>org.owasp.encoder</groupId>
+			<artifactId>encoder</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.owasp.encoder</groupId>
+			<artifactId>encoder-jsp</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<!-- Dependency for deserialization vulnerabilities: ysoserial manual (Commons Collections gadget) -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.0</version>
+		</dependency>
+		<!-- Dependency for deserialization vulnerabilities: ysoserial manual (BeanShell gadget) -->
+		<dependency>
+			<groupId>org.beanshell</groupId>
+			<artifactId>bsh</artifactId>
+			<version>2.0b5</version>
+		</dependency>
+		<!-- for the nice groovy stuff -->
+		<dependency>
+				<groupId>org.codehaus.groovy</groupId>
+				<artifactId>groovy</artifactId>
+				<version>2.4.3</version>
+		</dependency>
+		<!-- for the nice Jackson Databind stuff -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.8.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+		<!-- for the XStream with JNA stuff: -->
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.8</version>
+		</dependency>
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>marathon</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+					</archive>
+					<webResources>
+						<resource>
+							<!-- this is relative to the pom.xml directory -->
+							<directory>${project.basedir}/src/main/resources</directory>
+						</resource>
+					</webResources>
+					<warName>marathon</warName>
+				</configuration>
+			</plugin>
+
+			<!-- pre-compile any JSPs for SpotBugs analysis -->
+                        <plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-jspc-maven-plugin</artifactId>
+				<version>9.4.18.v20190429</version>
+                	        <executions>
+            	                	<execution>
+                                		<id>jspc</id>
+                        	        	<goals>
+                 	   	                <goal>jspc</goal>
+                                		</goals>
+                        	        	<configuration>
+                  	  	                <suppressSmap>false</suppressSmap>
+										<useProvidedScope>true</useProvidedScope>
+                        		        </configuration>
+                	  	          </execution>
+				</executions>
+			</plugin>
+
+			<!-- SpotBugs Static Analysis -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>3.1.11</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+					<failOnError>true</failOnError>
+					<!-- 
+					<includeFilterFile>${session.executionRootDirectory}/spotbugs-security-include.xml</includeFilterFile>
+					-->
+					<excludeFilterFile>${session.executionRootDirectory}/integration/false-positives/${spotbugs.suppression.filename}</excludeFilterFile>
+					<plugins>
+						<plugin>
+							<groupId>com.h3xstream.findsecbugs</groupId>
+							<artifactId>findsecbugs-plugin</artifactId>
+							<version>LATEST</version> <!-- Auto-update to the latest stable -->
+						</plugin>
+					</plugins>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+	</build>
+</project>
