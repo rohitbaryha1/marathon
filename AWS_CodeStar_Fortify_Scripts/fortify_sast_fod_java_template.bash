@@ -4,8 +4,8 @@
 
 #download the required tools installation script
 sha256_FTI='2156a4926b33f5130a8101b9a809ee189cc3e51e698e1ce7516ce31f3bb09da0'
-fortify_tool_installer='https://raw.githubusercontent.com/fortify/FortifyToolsInstaller/main/FortifyToolsInstaller.sh'  # BASE UTILITY DO NOT CHANGE
-
+#fortify_tool_installer='https://raw.githubusercontent.com/fortify/FortifyToolsInstaller/main/FortifyToolsInstaller.sh'  # BASE UTILITY DO NOT CHANGE
+fortify_tool_installer='https://raw.githubusercontent.com/fortify/FortifyToolsInstaller/ce2e059b07234d4e640fc9b798ba0b5bbb939336/FortifyToolsInstaller.sh'  # BASE UTILITY DO NOT CHANGE
 fod_url=$FOD_BASEURL 												# Fortify On Demand URL 
 fod_api_url='https://api.'`echo "$fod_url" | awk -F/ '{print $3}'`	# Fortify On Demand API URL
 fortify_tools_dir='/root/.fortify/tools/FoDUploader/v5.3.1'			# Default installation directory

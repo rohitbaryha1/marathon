@@ -6,8 +6,8 @@
 
 #download the required tools installation script
 sha256_FTI='2156a4926b33f5130a8101b9a809ee189cc3e51e698e1ce7516ce31f3bb09da0'
-fortify_tool_installer='https://raw.githubusercontent.com/fortify/FortifyToolsInstaller/main/FortifyToolsInstaller.sh'  # BASE UTILITY DO NOT CHANGE
-
+#fortify_tool_installer='https://raw.githubusercontent.com/fortify/FortifyToolsInstaller/main/FortifyToolsInstaller.sh'  # BASE UTILITY DO NOT CHANGE
+fortify_tool_installer='https://raw.githubusercontent.com/fortify/FortifyToolsInstaller/ce2e059b07234d4e640fc9b798ba0b5bbb939336/FortifyToolsInstaller.sh'  # BASE UTILITY DO NOT CHANGE
 #ScanCentral Server details
 sc_server=$FORTIFY_SC_URL										# this must be ScanCentral controller URL with trailing slash('/')
 auth_token=$FORTIFY_CI_TOKEN									# authentication token for SSC, this should be CI_TOKEN
